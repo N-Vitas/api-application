@@ -1,9 +1,11 @@
 package api
 
-import "github.com/emicklei/go-restful"
+import (
+	"github.com/emicklei/go-restful"
+)
 
-func (s *Api) AddService(services *restful.WebService)  {
-	s.services = append(s.services,)
+func (s *Api) AddService(service *restful.WebService)  {
+	s.services = append(s.services, service)
 }
 
 func (s *Api) Register()  {

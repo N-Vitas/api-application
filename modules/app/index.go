@@ -1,10 +1,9 @@
-package App
+package app
 
 import (
 	"github.com/magiconair/properties"
 	"api-application/modules/session"
 	"api-application/modules/api"
-	"flag"
 	"log"
 	"path/filepath"
 	"fmt"
@@ -18,22 +17,25 @@ type App struct {
 	Api            *api.Api
 }
 
-func NewApp(name string, value string, usage string) *App {
-	flag.Parse()
+func NewApp(propertiesFile *string) *App {
 	app := &App{}
-	app.propertiesFile = flag.String(name, value, usage)
+	app.propertiesFile = propertiesFile
 	var err error
 	if app.props, err = properties.LoadFile(*app.propertiesFile, properties.UTF8); err != nil {
 		log.Fatal("Unable to read properties:%v\n", err)
 	}
 	app.jwtSecret = app.GetSettingsString("jwt.secret", "")
-	app.Api.Token = []byte(app.jwtSecret)
 	return app
 }
+
 func (s *App) NewApi(icon string){
 	s.Api = api.NewApi()
 	s.Api.ApiIcon = filepath.Join(s.Api.SwaggerPath, icon)
 	s.Api.SwaggerPath = s.GetSettingsString("swagger.path", "")
+}
+
+func (s *App) SetToken(){
+	s.Api.Token = []byte(s.jwtSecret)
 }
 
 func (s *App) GetSettingsString (settings string, def string) string {
