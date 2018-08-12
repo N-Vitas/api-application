@@ -12,60 +12,32 @@ import (
 	"api-go-herobrine/modules/tikets"
 	"api-go-herobrine/modules/pultForum"
 	"api-go-herobrine/modules/images"
-	"api-application/modules/route"
 	"api-application/modules/session"
+	"api-application/modules/fileServer"
+	. "api-application/modules/app"
 	. "api-application/helpers"
-)
-
-var (
-	props          *properties.Properties
-	propertiesFile = flag.String("config", "config/app.properties", "the configuration file")
-	JwtSecret   string
 )
 
 func main() {
 	flag.Parse()
-	route.ApiIcon = filepath.Join(route.SwaggerPath, "files/favicon.ico")
-
+	app := NewApp("config", "config/app.properties", "the configuration file")
 	// Загрузка конфигурации из файла
-	Info("loading configuration from [%s]", *propertiesFile)
-	var err error
-	if props, err = properties.LoadFile(*propertiesFile, properties.UTF8); err != nil {
-		log.Fatal("Unable to read properties:%v\n", err)
-	}
-
-	route.SwaggerPath = props.GetString("swagger.path", "")
-	JwtSecret = props.GetString("jwt.secret", "")
-
+	Info("loading configuration")
 	// New, shared session manager
-	sessMng := session.NewSessionManager(props.FilterPrefix("database."))
-	defer sessMng.CloseAll()
-
-	// accept and respond in JSON unless told otherwise
-	restful.DefaultRequestContentType(restful.MIME_JSON)
-	restful.DefaultResponseContentType(restful.MIME_JSON)
-	// gzip if accepted
-	restful.DefaultContainer.EnableContentEncoding(true)
-	// faster router
-	restful.DefaultContainer.Router(restful.CurlyRouter{})
-	// no need to access body more than once
-	//restful.SetCacheReadEntity(false)
-
-	apiCors := props.GetBool("http.server.cors", true)
-	JwtToken := props.GetString("jwt.secret", "")
-	app.Token = []byte(JwtToken)
+	app.AddSession(session.NewSessionManager(app.FilterPrefix("database."))))
+	defer app.CloseSession()
+	app.NewApi("public/favicon.ico")
+	app.Api.Course(app.GetSettingsBool("http.server.cors", true))
+	app.Api.Filter(true)
+	app.Api.Register()
 
 	resurce := app.Register(sessMng, restful.DefaultContainer, apiCors)
 	resurce.Conn = techquest.NewServer("/socket")
 
-	addr := props.MustGet("http.server.host") + ":" + props.MustGet("http.server.port")
-	//if os.Args[1]!="" {
-	//	addr = props.MustGet("http.server.host") + ":" + os.Args[1]
-	//}
-	basePath := "http://" + addr
+	basePath := "http://" + app.GetAddress()
 
 	// Serve favicon.ico
-	http.HandleFunc(route.ApiIcon, route.Icon)
+	http.HandleFunc(app.Api.ApiIcon, app.Api.Icon)
 
 	tikets.NewTicketService(resurce,restful.DefaultContainer)
 	pultForum.NewForumService(resurce,restful.DefaultContainer)
@@ -76,10 +48,8 @@ func main() {
 	go resurce.Conn.Listen()
 	go resurce.Worker()
 
-	fs := http.FileServer(http.Dir("./modules/techquest/webroot"))
-	http.Handle("/webroot/", http.StripPrefix("/webroot/", fs))
-
+	fileServer.NewFileServer("/","./public/www")
 	Info("ready to serve on %s", basePath)
-	log.Fatal(http.ListenAndServe(addr, nil))
+	log.Fatal(http.ListenAndServe(app.GetAddress(), nil))
 
 }
