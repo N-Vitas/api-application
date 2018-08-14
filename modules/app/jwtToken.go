@@ -17,7 +17,7 @@ type Login struct {
 }
 func (self *App) TokenWebService() *restful.WebService {
 	ws := new(restful.WebService)
-	ws.Path("/token")
+	ws.Path("/api/token")
 	ws.Consumes("*/*")
 	ws.Produces(restful.MIME_JSON)
 	ws.Route(ws.GET("/").To(self.Welcome).

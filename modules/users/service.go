@@ -10,7 +10,7 @@ import (
 
 func (self *User) UserWebService() *restful.WebService {
 	ws := new(restful.WebService)
-	ws.Path("/users")
+	ws.Path("/api/users")
 	ws.Consumes("*/*")
 	ws.Produces(restful.MIME_JSON)
 	ws.Route(ws.GET("/").To(self.UserList).

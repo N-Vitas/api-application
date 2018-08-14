@@ -13,7 +13,7 @@ func NewTestService() *restful.WebService{
 
 func (self *Test) TicketWebService() *restful.WebService {
 	ws := new(restful.WebService)
-	ws.Path("/tests")
+	ws.Path("/api/tests")
 	ws.Consumes("*/*")
 	ws.Produces(restful.MIME_JSON)
 	ws.Route(ws.GET("/").To(self.NotFound).

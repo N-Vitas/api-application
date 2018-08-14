@@ -97,7 +97,7 @@ func (s *Api) CreateToken(auth Auth) string {
 		"role": auth.Role,
 		"fullName": auth.FullName,
 	})
-	helpers.Info("%s авторизировался",auth.FullName)
+	helpers.Info("%s авторизировался",auth.FullName, s.Token, string(s.Token))
 	// Sign and get the complete encoded token as a string using the secret
 	tokenString, _ := token.SignedString(s.Token)
 	return  tokenString
