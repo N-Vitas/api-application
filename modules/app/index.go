@@ -34,7 +34,7 @@ func (s *App) NewApi(icon string){
 	s.Api.SwaggerPath = s.GetSettingsString("swagger.path", "")
 }
 
-func (s *App) SetToken(){
+func (s *App) SetSignature(){
 	s.Api.Token = []byte(s.jwtSecret)
 }
 

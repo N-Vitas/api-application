@@ -22,7 +22,7 @@ func main() {
 	app.AddSession(session.NewSessionManager(app.FilterPrefix("database.")))
 	defer app.CloseSession()
 	app.NewApi("public/favicon.ico")
-	app.SetToken()
+	app.SetSignature()
 	app.Api.Course(app.GetSettingsBool("http.server.cors", true))
 	app.Api.Filter(true)
 	app.Api.AddService(test.NewTestService())
