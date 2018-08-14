@@ -10,6 +10,8 @@ import (
 	. "api-application/modules/app"
 	. "api-application/helpers"
 	"api-application/modules/users"
+	"api-application/modules/sections"
+	"api-application/modules/category"
 )
 
 func main() {
@@ -28,6 +30,9 @@ func main() {
 	app.Api.AddService(test.NewTestService())
 	app.Api.AddService(app.TokenWebService())
 	app.Api.AddService(users.NewUserService(app.GetSession()))
+	app.Api.AddService(sections.NewSectionService(app.GetSession()))
+	app.Api.AddService(category.NewCategoryService(app.GetSession()))
+
 	app.Api.Register()
 	// Serve favicon.ico
 	http.HandleFunc(app.Api.ApiIcon, app.Api.Icon)
