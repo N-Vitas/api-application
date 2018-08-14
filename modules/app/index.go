@@ -52,6 +52,10 @@ func (s *App) FilterPrefix(prefix string) *properties.Properties {
 func (s *App) AddSession(sessMng *session.SessionManager) {
 	s.sessMng = sessMng
 }
+
+func (s *App) GetSession() *session.SessionManager {
+	return s.sessMng
+}
 func (s* App) GetAddress() string {
 	return fmt.Sprintf("%s:%s",s.props.MustGet("http.server.host"),s.props.MustGet("http.server.port"))
 }

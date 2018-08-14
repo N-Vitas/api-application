@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"sync"
 	"gopkg.in/mgo.v2"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/magiconair/properties"
 	"fmt"
 	"strings"
@@ -31,6 +32,26 @@ func NewSessionManager(props *properties.Properties) *SessionManager {
 	}
 	sess.SetConfig(props)
 	return sess
+}
+
+func NewSession() *SessionManager {
+	sess := &SessionManager{
+		sessions:   make(map[string]*sql.DB),
+	}
+	return sess
+}
+// Переподключение или создание подключения к базе
+func (self *SessionManager) GetStorageDb() *sql.DB {
+	if self.sessions["storage"] != nil {
+		return self.sessions["storage"]
+	}
+	db, err := sql.Open("sqlite3", "modules/session/application.db")
+	if err != nil {
+		info("Error Config %s", err)
+		return nil
+	}
+	self.sessions["storage"] = db
+	return self.sessions["storage"]
 }
 
 // Closes session based on `uri` or `host:port`

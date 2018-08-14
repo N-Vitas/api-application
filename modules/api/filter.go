@@ -5,11 +5,19 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"fmt"
 	"github.com/emicklei/go-restful"
+	"api-application/helpers"
 )
+
+type Auth struct {
+	Id int64 `json:"id"`
+	Login string `json:"login"`
+	Role string `json:"role"`
+	FullName string `json:"full_name"`
+}
 
 func (s *Api) JWTFilter(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
 
-	if "OPTIONS" != req.Request.Method && strings.Index(req.Request.URL.String(), "login") != -1 {
+	if "OPTIONS" != req.Request.Method && strings.Index(req.Request.URL.String(), "token") != -1 {
 		chain.ProcessFilter(req, resp)
 		return
 	}
@@ -69,4 +77,28 @@ func (s *Api) Filter(filter bool) {
 	if filter {
 		s.container.Filter(s.JWTFilter)
 	}
+}
+
+
+func (s *Api) ParseClaims(claims jwt.MapClaims) Auth {
+	id := int64(claims["id"].(float64))
+	return Auth{
+		id,
+		fmt.Sprint("s%",claims["login"]),
+		fmt.Sprint("s%",claims["role"]),
+		fmt.Sprint("s%",claims["fullName"]),
+	}
+}
+
+func (s *Api) CreateToken(auth Auth) string {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id": auth.Id,
+		"login": auth.Login,
+		"role": auth.Role,
+		"fullName": auth.FullName,
+	})
+	helpers.Info("%s авторизировался",auth.FullName)
+	// Sign and get the complete encoded token as a string using the secret
+	tokenString, _ := token.SignedString(s.Token)
+	return  tokenString
 }
