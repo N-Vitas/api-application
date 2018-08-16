@@ -79,7 +79,7 @@ func (u *User) FindById(id int64) bool {
 }
 
 func (u *User) IsEmpty() bool {
-	return len(u.FullName) == 0 && len(u.Login) == 0 && len(u.Password) == 0 && len(u.Role) == 0
+	return len(u.FullName) == 0 || len(u.Login) == 0 || len(u.Password) == 0 || len(u.Role) == 0
 }
 
 func (u *User) Create() bool {

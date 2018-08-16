@@ -67,7 +67,7 @@ func (u *Category) FindById(id int64) bool {
 }
 
 func (u *Category) IsEmpty() bool {
-	return len(u.Title) == 0 && u.Date == 0
+	return len(u.Title) == 0 || u.Date == 0
 }
 
 func (u *Category) Create() bool {

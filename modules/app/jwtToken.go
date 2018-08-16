@@ -31,7 +31,7 @@ func (self *App) TokenWebService() *restful.WebService {
 
 
 func (self *App) Welcome(req *restful.Request, resp *restful.Response) {
-	resp.WriteEntity(helpers.AnwerMessage(200,"Добро пожаловать"))
+	resp.WriteEntity(helpers.AnwerMessage(http.StatusOK,"Добро пожаловать"))
 }
 
 func (s *App) ParseClaims(claims jwt.MapClaims) api.Auth {
@@ -71,9 +71,9 @@ func (d *App) GetToken(req *restful.Request, resp *restful.Response)  {
 	if user.FindByName(document.Username) {
 		if user.Password == user.GetMD5Hash(document.Password) {
 			token := d.Api.CreateToken(api.Auth{user.Id,user.Login,user.Role,user.FullName})
-			resp.WriteEntity(helpers.AnwerMessage(200,token))
+			resp.WriteEntity(helpers.AnwerMessage(http.StatusOK,token))
 			return
 		}
 	}
-	resp.WriteHeaderAndEntity(403, helpers.AnwerMessage(403,"Неверный логин или пароль"))
+	resp.WriteHeaderAndEntity(http.StatusForbidden, helpers.AnwerMessage(http.StatusForbidden,"Неверный логин или пароль"))
 }

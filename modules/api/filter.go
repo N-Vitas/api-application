@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/emicklei/go-restful"
 	"api-application/helpers"
+	"net/http"
 )
 
 type Auth struct {
@@ -56,7 +57,7 @@ func (s *Api) JWTFilter(req *restful.Request, resp *restful.Response, chain *res
 			return
 		}
 	}
-	resp.WriteHeaderAndEntity(403, map[string]string{"code":"403","error":"Неверный токен авторизации"})
+	resp.WriteHeaderAndEntity(http.StatusForbidden, map[string]string{"code":"403","error":"Неверный токен авторизации"})
 }
 
 func (s *Api) Course(cors bool) {

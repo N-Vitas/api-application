@@ -46,7 +46,7 @@ func (self *Category) CategoryById(req *restful.Request, resp *restful.Response)
 		resp.WriteEntity(self)
 		return
 	}
-	resp.WriteHeaderAndEntity(404, helpers.AnwerMessage(404, "Ничего не найдено."))
+	resp.WriteHeaderAndEntity(http.StatusNotFound, helpers.AnwerMessage(http.StatusNotFound, "Ничего не найдено."))
 }
 
 func (self *Category) CreateCategory(req *restful.Request, resp *restful.Response) {
@@ -60,7 +60,7 @@ func (self *Category) CreateCategory(req *restful.Request, resp *restful.Respons
 		resp.WriteEntity(self)
 		return
 	}
-	resp.WriteHeaderAndEntity(102, helpers.AnwerMessage(102, "Ошибка создания категории"))
+	resp.WriteHeaderAndEntity(http.StatusInternalServerError, helpers.AnwerMessage(http.StatusInternalServerError, "Ошибка создания категории"))
 }
 
 func (self *Category) UpdateCategory(req *restful.Request, resp *restful.Response) {
@@ -75,14 +75,14 @@ func (self *Category) UpdateCategory(req *restful.Request, resp *restful.Respons
 			resp.WriteEntity(self)
 			return
 		}
-		resp.WriteHeaderAndEntity(102, helpers.AnwerMessage(102, "Ошибка обновления категории"))
+		resp.WriteHeaderAndEntity(http.StatusInternalServerError, helpers.AnwerMessage(http.StatusInternalServerError, "Ошибка обновления категории"))
 		return
 	}
 	if self.Create() {
 		resp.WriteEntity(self)
 		return
 	}
-	resp.WriteHeaderAndEntity(102, helpers.AnwerMessage(102, "Ошибка создания категории"))
+	resp.WriteHeaderAndEntity(http.StatusInternalServerError, helpers.AnwerMessage(http.StatusInternalServerError, "Ошибка создания категории"))
 }
 func (self *Category) DeleteCategory(req *restful.Request, resp *restful.Response) {
 	decoder := json.NewDecoder(req.Request.Body)
@@ -93,10 +93,10 @@ func (self *Category) DeleteCategory(req *restful.Request, resp *restful.Respons
 	}
 	if self.Id != 0 {
 		if self.Delete() {
-			resp.WriteEntity(helpers.AnwerMessage(200, "Категория успешно удален"))
+			resp.WriteEntity(helpers.AnwerMessage(http.StatusOK, "Категория успешно удален"))
 			return
 		}
-		resp.WriteHeaderAndEntity(102, helpers.AnwerMessage(102, "Ошибка удаления категории"))
+		resp.WriteHeaderAndEntity(http.StatusInternalServerError, helpers.AnwerMessage(http.StatusInternalServerError, "Ошибка удаления категории"))
 		return
 	}
 	resp.WriteHeaderAndEntity(http.StatusBadRequest, helpers.AnwerMessage(http.StatusBadRequest, "отсутствует номер категории"))

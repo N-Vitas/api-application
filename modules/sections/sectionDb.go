@@ -77,7 +77,7 @@ func (u *Section) FindById(id int64) bool {
 }
 
 func (u *Section) IsEmpty() bool {
-	return len(u.Key) == 0 && len(u.Title) == 0 && u.Value == 0
+	return len(u.Key) == 0 || len(u.Title) == 0
 }
 
 func (u *Section) Create() bool {

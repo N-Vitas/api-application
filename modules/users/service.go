@@ -61,7 +61,7 @@ func (self *User) CreateUser(req *restful.Request, resp *restful.Response) {
 		resp.WriteEntity(self)
 		return
 	}
-	resp.WriteHeaderAndEntity(102, helpers.AnwerMessage(102, "Ошибка создания пользователя"))
+	resp.WriteHeaderAndEntity(http.StatusInternalServerError, helpers.AnwerMessage(http.StatusInternalServerError, "Ошибка создания пользователя"))
 }
 
 func (self *User) UpdateUser(req *restful.Request, resp *restful.Response) {
@@ -77,14 +77,14 @@ func (self *User) UpdateUser(req *restful.Request, resp *restful.Response) {
 			resp.WriteEntity(self)
 			return
 		}
-		resp.WriteHeaderAndEntity(102, helpers.AnwerMessage(102, "Ошибка обновления пользователя"))
+		resp.WriteHeaderAndEntity(http.StatusInternalServerError, helpers.AnwerMessage(http.StatusInternalServerError, "Ошибка обновления пользователя"))
 		return
 	}
 	if self.Create() {
 		resp.WriteEntity(self)
 		return
 	}
-	resp.WriteHeaderAndEntity(102, helpers.AnwerMessage(102, "Ошибка создания пользователя"))
+	resp.WriteHeaderAndEntity(http.StatusInternalServerError, helpers.AnwerMessage(http.StatusInternalServerError, "Ошибка создания пользователя"))
 }
 func (self *User) DeleteUser(req *restful.Request, resp *restful.Response) {
 	decoder := json.NewDecoder(req.Request.Body)
@@ -95,10 +95,10 @@ func (self *User) DeleteUser(req *restful.Request, resp *restful.Response) {
 	}
 	if self.Id != 0 {
 		if self.Delete() {
-			resp.WriteEntity(helpers.AnwerMessage(200, "Пользователь успешно удален"))
+			resp.WriteEntity(helpers.AnwerMessage(http.StatusOK, "Пользователь успешно удален"))
 			return
 		}
-		resp.WriteHeaderAndEntity(102, helpers.AnwerMessage(102, "Ошибка удаления пользователя"))
+		resp.WriteHeaderAndEntity(http.StatusInternalServerError, helpers.AnwerMessage(http.StatusInternalServerError, "Ошибка удаления пользователя"))
 		return
 	}
 	resp.WriteHeaderAndEntity(http.StatusBadRequest, helpers.AnwerMessage(http.StatusBadRequest, "отсутствует номер пользователя"))
