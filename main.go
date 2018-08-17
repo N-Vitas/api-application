@@ -13,6 +13,9 @@ import (
 	"api-application/modules/sections"
 	"api-application/modules/category"
 	"api-application/modules/product"
+	"api-application/modules/charge"
+	"api-application/modules/catalog"
+	"api-application/modules/discount"
 )
 
 func main() {
@@ -34,6 +37,9 @@ func main() {
 	app.Api.AddService(sections.NewSectionService(app.GetSession()))
 	app.Api.AddService(category.NewCategoryService(app.GetSession()))
 	app.Api.AddService(product.NewProductService(app.GetSession()))
+	app.Api.AddService(charge.NewChargeService(app.GetSession()))
+	app.Api.AddService(discount.NewDiscountService(app.GetSession()))
+	app.Api.AddService(catalog.NewСatalogService(app.GetSession()))
 
 	app.Api.Register()
 	// Serve favicon.ico
