@@ -1,4 +1,4 @@
-var count = 1000;
+var count = 500;
 var arr = [];
 var pr,h,w,r;
 function setup() {
@@ -60,6 +60,7 @@ function draw() {
     }
   }	
   if(!swapped) {
+    r = shuffle(arr);
     updateFull(r)
   }
   swapped = false;
@@ -70,7 +71,8 @@ function draw() {
       r[i+1] = temp1;
       swapped = true;
     }
-  }  
+  }
+   
   updateFull(r)
 }
 
