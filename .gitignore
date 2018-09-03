@@ -2,3 +2,6 @@
 /**/.idea/**/*
 app.properties
 /confog/app.properties
+/public/react/build
+/public/react/node_modules
+/public/react/package-lock.json
