@@ -36,16 +36,29 @@ class App extends React.Component {
     return this.props.location.pathname !== "/maps";
   }
   componentDidMount() {
-    if(navigator.platform.indexOf('Win') > -1){
+    if(navigator.platform.indexOf('Win') > -1 && this.refs.mainPanel){
       // eslint-disable-next-line
       const ps = new PerfectScrollbar(this.refs.mainPanel);
     }
   }
   componentDidUpdate() {
-    this.refs.mainPanel.scrollTop = 0;
+    if (this.refs.mainPanel) {
+      this.refs.mainPanel.scrollTop = 0;
+    }
   }
   render() {
     const { classes, ...rest } = this.props;
+    if (rest.location.pathname.indexOf("login") !== -1) {
+      return (
+          this.getRoute() ? (
+            <div className={classes.content}>
+              <div className={classes.container}>{switchRoutes}</div>
+            </div>
+          ) : (
+            <div className={classes.map}>{switchRoutes}</div>
+          )
+      );
+    }
     return (
       <div className={classes.wrapper}>
         <Sidebar
