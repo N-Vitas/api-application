@@ -14,6 +14,7 @@ import appStyle from "assets/jss/material-dashboard-react/appStyle.jsx";
 
 import image from "assets/img/sidebar-2.jpg";
 import logo from "assets/img/reactlogo.png";
+import UserDb from "variables/database";
 
 const switchRoutes = (
   <Switch>
@@ -33,6 +34,9 @@ class App extends React.Component {
     this.setState({ mobileOpen: !this.state.mobileOpen });
   };
   getRoute() {
+    if(!UserDb.isAuth()) {
+      this.props.location.pathname = "/login";
+    }
     return this.props.location.pathname !== "/maps";
   }
   componentDidMount() {
@@ -48,7 +52,7 @@ class App extends React.Component {
   }
   render() {
     const { classes, ...rest } = this.props;
-    if (rest.location.pathname.indexOf("login") !== -1) {
+    if (!UserDb.isAuth()) {
       return (
           this.getRoute() ? (
             <div className={classes.content}>

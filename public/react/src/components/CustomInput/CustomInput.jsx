@@ -15,6 +15,7 @@ function CustomInput({ ...props }) {
     labelProps,
     inputProps,
     error,
+    type,
     success
   } = props;
 
@@ -51,6 +52,7 @@ function CustomInput({ ...props }) {
           underline: underlineClasses,
         }}
         id={id}
+        type={type}
         {...inputProps}
       />
       {error ? (
