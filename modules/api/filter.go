@@ -17,7 +17,6 @@ type Auth struct {
 }
 
 func (s *Api) JWTFilter(req *restful.Request, resp *restful.Response, chain *restful.FilterChain) {
-
 	if "OPTIONS" != req.Request.Method && strings.Index(req.Request.URL.String(), "token") != -1 {
 		chain.ProcessFilter(req, resp)
 		return
@@ -65,7 +64,7 @@ func (s *Api) Course(cors bool) {
 	if cors {
 		corsRule := restful.CrossOriginResourceSharing{
 			//ExposeHeaders: []string{"Content-Type"},
-			AllowedDomains: []string{"http://invo.dev","http://herobrine.my","http://cabinet.kassa24.dev","http://192.168.150.52","http://pult.kassa24.kz","https://pult.kassa24.kz"},
+			//AllowedDomains: []string{"http://127.0.0.1:3000/"},
 			AllowedHeaders: []string{"content-type", "authorization"},
 			CookiesAllowed: false,
 			Container:      s.container,
